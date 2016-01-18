@@ -1,0 +1,42 @@
+---
+output: pdf_document
+---
+#Normal linear regression
+rm(fit, results)
+fit=lm((URATE1MONTH*1000)~RS2231142+AGECOL+BMI+SEX, data=Cau_imp_RG)
+summary(fit)
+confint(fit)
+
+results <- data.frame(matrix(nrow=1,ncol=7))
+names(results) <- c("SNP", "B", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142")
+
+results$B[]<- coef(summary(fit))[2,1]
+results$p[]<- coef(summary(fit))[2,4]
+results$CI_1[]<- confint(fit)[2,1]
+results$CI_2[]<- confint(fit)[2,2]
+results$n[]<-  (summary(fit)$df[2]) + 1
+results$SE[]<- coef(summary(fit))[2, 2]
+results
+
+
+
+##Normal logistic regression
+rm(fit, results)
+fit=glm((MYGOUTSUM-1)~RS2231142_g+AGECOL+SEX, data=Cau_imp_RG, family=binomial)
+
+results <- data.frame(matrix(nrow=1,ncol=7))
+names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142")
+summary(fit)
+co<- exp(coefficients(fit))
+cf<- exp(confint(fit))
+
+  results$OR[]<- co[2]
+  results$p[]<- coef(summary(fit))[2,4]
+  results$CI_1[]<- cf[2,1]
+  results$CI_2[]<- cf[2,2]
+  results$n[]<-  (summary(fit)$df[2]) + 1
+  results$SE[]<- (summary(fit))[2, 2]
+results
+write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
