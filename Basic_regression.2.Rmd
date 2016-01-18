@@ -53,7 +53,7 @@ co
 cf
 ```
 
-if you want to look at the coefficients and confidence intervals of all regression models.
+if you want to look at the coefficients and confidence intervals of all variables in the regression model.
 
 
 You can also put results for the first variable of the logistic regression model into a table.
