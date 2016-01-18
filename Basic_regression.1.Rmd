@@ -39,5 +39,4 @@ cf<- exp(confint(fit))
   results$n[]<-  (summary(fit)$df[2]) + 1
   results$SE[]<- (summary(fit))[2, 2]
 results
-
 write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")

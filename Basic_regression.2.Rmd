@@ -1,0 +1,70 @@
+---
+title: "Basic regression"
+author: "Rebekah Wrigley"
+date: "18/01/2015"
+output: pdf_document
+---
+
+#Basic linear regression
+In the example below RS2231142 is the first explanatory variable and age, BMI, and sex are covariates.
+```{R, eval=FALSE}
+fit=lm((URATE1MONTH*1000)~RS2231142+AGECOL+BMI+SEX, data=Cau_imp_RG)
+summary(fit)
+confint(fit)
+```
+
+Results from the linear regression model can be put into a table using the code below (this only includes results for the first variable in the regression model adjusted for the effects of the other variables).
+```{R, eval=FALSE}
+results <- data.frame(matrix(nrow=1,ncol=7))
+names(results) <- c("SNP", "B", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142")
+
+results$B[]<- coef(summary(fit))[2,1]  # extracts beta value from model
+results$p[]<- coef(summary(fit))[2,4]  # extracts p value 
+results$CI_1[]<- confint(fit)[2,1]  # confidence interval
+results$CI_2[]<- confint(fit)[2,2]
+results$n[]<-  (summary(fit)$df[2]) + 5  # number (in this case "5") should be number of explanatory variables + 1
+results$SE[]<- coef(summary(fit))[2, 2]  # standard error
+results
+```
+
+The following code can be used to delete results to avoid mixing up results from different regression models.
+
+```{R, eval=FALSE}
+rm(fit, results)
+```
+
+#Basic logistic regression
+
+```{R, eval=FALSE}
+fit=glm((MYGOUTSUM-1)~RS2231142_g+AGECOL+SEX, data=Cau_imp_RG, family=binomial)
+
+results <- data.frame(matrix(nrow=1,ncol=7))
+names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142")
+summary(fit)
+co<- exp(coefficients(fit)) 
+cf<- exp(confint(fit))  
+```
+
+Type 
+```{R, eval=FALSE}
+co
+cf
+```
+
+if you want to look at the coefficients and confidence intervals of all regression models.
+
+
+You can also put results for the first variable of the logistic regression model into a table.
+```
+  results$OR[]<- co[2]
+  results$p[]<- coef(summary(fit))[2,4]
+  results$CI_1[]<- cf[2,1]
+  results$CI_2[]<- cf[2,2]
+  results$n[]<-  (summary(fit)$df[2]) + 1 # number (in this case "5") should be number of explanatory variables + 1
+  results$SE[]<- (summary(fit))[2, 2]
+results
+
+write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # write results into a .txt file
+```
