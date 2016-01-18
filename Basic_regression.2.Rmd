@@ -23,7 +23,7 @@ results$B[]<- coef(summary(fit))[2,1]  # extracts beta value from model
 results$p[]<- coef(summary(fit))[2,4]  # extracts p value 
 results$CI_1[]<- confint(fit)[2,1]  # confidence interval
 results$CI_2[]<- confint(fit)[2,2]
-results$n[]<-  (summary(fit)$df[2]) + 5  # number (in this case "5") should be number of explanatory variables + 1
+results$n[]<-  (summary(fit)$df[2]) + 4  # number (in this case "4") should be number of explanatory variables + 1
 results$SE[]<- coef(summary(fit))[2, 2]  # standard error
 results
 ```
