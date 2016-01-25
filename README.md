@@ -16,11 +16,11 @@ Association of rs2231142 and rs10011796 with urate in urate quartiles in Europea
 Excluded people with kidney disease, on urate lowering therapy, related people in FHS generation 3.  People on diuretics are included since associations including and excluding people with diuretics were compared and there were no major differences.
 
 ## Where I got datasets from
--Big file from Cushla containing NZ cases and controls, AGRIA, Eurogout, ARIC, and FHS (both generations) with rs2231142, rs10011796, rs2043211, and rs1143623 genotype info (for ARIC and FHS these SNPs were reimputed).  I manually deleted MAS gout box 10 and AGRIA ST Vincent since these did not have FULLCAUGTAFF column info (so was not certain that these were European).
--rs2231142 and rs10011796 info for CARDIA and CHS from Jaron
--rs1194223 info for CARDIA and CHS from Jaron
--rs1194223 info for NZ cases and controls and NPH from Mandy
--Diuretic and pre urate lowering therapy urate ino from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
++Big file from Cushla containing NZ cases and controls, AGRIA, Eurogout, ARIC, and FHS (both generations) with rs2231142, rs10011796, rs2043211, and rs1143623 genotype info (for ARIC and FHS these SNPs were reimputed).  I manually deleted MAS gout box 10 and AGRIA ST Vincent since these did not have FULLCAUGTAFF column info (so was not certain that these were European).
++rs2231142 and rs10011796 info for CARDIA and CHS from Jaron
++rs1194223 info for CARDIA and CHS from Jaron
++rs1194223 info for NZ cases and controls and NPH from Mandy
++Diuretic and pre urate lowering therapy urate ino from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
 
 
 
