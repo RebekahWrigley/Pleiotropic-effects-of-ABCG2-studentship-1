@@ -1,5 +1,5 @@
 # Pleiotropic-effects-of-ABCG2-studentship
-R scripts detailing file organisation/subsetting and regression commands used in the studentship.
+* R scripts detailing file organisation/subsetting and regression commands used in the studentship. *
 
 ## Overview
 The general aim of this studentship was to investigate the relationship of ABCG2 variants (rs2231142 and rs10011796) with the immune response in gout.  This was meant to follow on from the Multiplicative interaction of functional inflammasome variants in determining the risk of gout paper (McKinney, 2015).  At first I used the same data as used in this paper (NZ gout cases and controls, Eurogout, AGRIA, ARIC and FHS) but later Tony asked me to add NPH, CARDIA, and CHS datasets.  I genotyped rs10011796 in NZ cases and controls and rs2231142 in AGRIA and some Eurogout boxes.  
@@ -24,7 +24,7 @@ Excluded people with kidney disease, on urate lowering therapy, related people i
 
 - rs1194223 info for NZ cases and controls and NPH from Mandy
 
-- Diuretic and pre urate lowering therapy urate ino from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
+- Diuretic and pre urate lowering therapy urate info from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
 
 
 
