@@ -19,6 +19,8 @@ NPH_2<- NPH[duplicated(NPH$minor)!=TRUE,]
 # Reordering columns in a dataframe- might want to do this if going to run a loop on adjacent columns.
 Pol_NPH_nm_4<- Pol_NPH_nm_3[, c(1:49, 65, 50:64)]  # put column numbers in the order you want.
 
+# Remove columns from a dataframe
+data_2<- subset(data, select=-c(column_a, column_b))
 
 # Merging contents of mutually exclusive columns (where either one or the other column has data for a given row)- 
 ## This is useful after merging 2 files since there will be .x and .y versions of shared columns.
