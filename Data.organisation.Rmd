@@ -20,7 +20,8 @@ NPH_2<- NPH[duplicated(NPH$minor)!=TRUE,]
 Pol_NPH_nm_4<- Pol_NPH_nm_3[, c(1:49, 65, 50:64)]  # put column numbers in the order you want.
 
 
-# Merging contents of mutually exclusive columns (where either one or the other column has data for a given row)- this is useful after merging 2 files since there will be .x and .y versions of shared columns.
+# Merging contents of mutually exclusive columns (where either one or the other column has data for a given row)- 
+## This is useful after merging 2 files since there will be .x and .y versions of shared columns.
 Cau_new$RS2231142_g<- ifelse(is.na(Cau_new$RS2231142_g.x)!=TRUE, Cau_new$RS2231142_g.x, Cau_new$RS2231142_g.y)
 
 # Shortening long column names where you want to keep only part of the name before an underscore
