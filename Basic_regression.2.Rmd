@@ -19,12 +19,12 @@ results <- data.frame(matrix(nrow=1,ncol=7))
 names(results) <- c("SNP", "B", "CI_1", "CI_2", "p", "n", "SE")
 results$SNP <- c("RS2231142")
 
-results$B[]<- coef(summary(fit))[2,1]  # extracts beta value from model
-results$p[]<- coef(summary(fit))[2,4]  # extracts p value 
-results$CI_1[]<- confint(fit)[2,1]  # confidence interval
-results$CI_2[]<- confint(fit)[2,2]
-results$n[]<-  (summary(fit)$df[2]) + 5  # number (in this case "5") should be number of explanatory variables + 1
-results$SE[]<- coef(summary(fit))[2, 2]  # standard error
+results$B<- coef(summary(fit))[2,1]  # extracts beta value from model
+results$p<- coef(summary(fit))[2,4]  # extracts p value 
+results$CI_1<- confint(fit)[2,1]  # confidence interval
+results$CI_2<- confint(fit)[2,2]
+results$n<-  (summary(fit)$df[2]) + 5  # number (in this case "5") should be number of explanatory variables + 1
+results$SE<- coef(summary(fit))[2, 2]  # standard error
 results
 ```
 
@@ -58,12 +58,12 @@ if you want to look at the coefficients and confidence intervals of all variable
 
 You can also put results for the first variable of the logistic regression model into a table.
 ```
-  results$OR[]<- co[2]
-  results$p[]<- coef(summary(fit))[2,4]
-  results$CI_1[]<- cf[2,1]
-  results$CI_2[]<- cf[2,2]
-  results$n[]<-  (summary(fit)$df[2]) + 4  # number (in this case "4") should be number of explanatory variables + 1
-  results$SE[]<- (summary(fit))[2, 2]
+  results$OR<- co[2]
+  results$p<- coef(summary(fit))[2,4]
+  results$CI_1<- cf[2,1]
+  results$CI_2<- cf[2,2]
+  results$n<-  (summary(fit)$df[2]) + 4  # number (in this case "4") should be number of explanatory variables + 1
+  results$SE<- (summary(fit))[2, 2]
 results
 
 write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # write results into a .txt file
