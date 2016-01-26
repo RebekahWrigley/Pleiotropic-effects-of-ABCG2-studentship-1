@@ -1,5 +1,5 @@
 ---
-title: "Random.useful.stuff"
+title: "Data.organisation.and.naming"
 author: "Rebekah Wrigley"
 date: "26/01/2015"
 output: pdf_document
