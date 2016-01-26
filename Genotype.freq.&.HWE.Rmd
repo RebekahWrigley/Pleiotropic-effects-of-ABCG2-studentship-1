@@ -4,13 +4,16 @@ author: "Rebekah Wrigley"
 date: "27/01/2015"
 output: pdf_document
 ---
+The examples below round the function outputs to 2 digits but you don't have to do this.
+# Genotype/allele frequencies
+## Calculating minor allele frequencies
 ```{R, eval=TRUE}
 # Read in file
  NZ_FACC_allg_2 <- read.delim("~/ABCG2/Pleiotropic-effects-of-ABCG2-studentship-1/NZ_FACC_allg_2.txt", stringsAsFactors=FALSE)
 ```
 
 ```{R, eval=TRUE}
-# Minor allele frequency function
+# The function arguments maj, het, and minor are genotype counts.
 MAF<- function(maj, het, minor){
 results<- c(NA, NA)
 names(results)<- c("n", "MAF")
@@ -19,19 +22,18 @@ results[2]<- (het+(minor*2))/((maj+het+minor)*2)*100  # Minor allele frequency
 results
 }
 
-## MAF for one dataset/group
-round(MAF(263, 42, 1), digits = 2)
+# MAF for one dataset/group
+round(MAF(263, 42, 5), digits = 2)
 
 # MAF for multiple subgroups
 mytable<- table(NZ_FACC_allg_2$GU_stat, NZ_FACC_allg_2$RS2231142)
 colnames(mytable)<- c("maj", "het", "minor")
-mytable
 
 t(round(mapply(MAF, mytable[,"maj"], mytable[,"het"], mytable[,"minor"]), digits=2)) 
 ```
 
+## Calculating genotype frequencies
 ```{R, eval=TRUE}
-#Genotype frequencies
 gen_freq<- function(maj, het, minor){
   results<- c(NA, NA, NA)
   names(results)<- c("maj_freq", "het_freq", "min_freq")
@@ -41,11 +43,16 @@ gen_freq<- function(maj, het, minor){
   results
 }
 
+# Genotype frequencies for a single dataset/group
+round(gen_freq(263, 42, 1), digits = 2)
+
+# Genotype frequencies for multiple subgroups
 t(round(mapply(gen_freq, mytable[,"maj"], mytable[,"het"], mytable[,"minor"]), digits=2))
 ```
 
+## Calculating frequencies of combined genotypes
+This function works where there are four genotype categories. The example below applies the function to cases and controls at the same time.
 ```{R, eval=TRUE}
-# Combined genotype frequencies where there are four combined genotype categories
 y<- table(NZ_FACC_allg_2$MYGOUTSUM, NZ_FACC_allg_2$abcg_g_com)  # abcg_g_com is the combined genotype column.
 colnames(y)<- c("A", "B", "C", "D")
 rownames(y)<- c("control", "case")
@@ -61,4 +68,21 @@ com_freq<- function(A, B, C, D){
 }
 
 round(mapply(com_freq, y[,"A"], y[,"B"], y[,"C"], y[,"D"]), digits=2)
+```
+# Hardy Weinberg
+```{R, eval=FALSE}
+# Install HardyWeinberg package 
+install.packages("HardyWeinberg")
+
+library("HardyWeinberg", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")  
+
+# HWE p values and MAF for a single dataset
+HWChisq(c(AA=67, AB=80, BB=5), cc = 0, verbose =1)  # AA, AB, and BB are genotype counts, see function documentation.
+
+
+# HWE p values for a matrix with the column names AA, AB, and BB; note this doesn't give minor allele frequencies.
+Results<- HWChisqMat(mymatrix, cc = 0, alpha = 0.05, verbose = FALSE)
+cbind(mymatrix,Results$pvalvec)
+## Note: ensure your table is a matrix e.g.:
+mymatrix<- as.matrix(mydataframe) 
 ```
