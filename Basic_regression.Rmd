@@ -68,3 +68,12 @@ results
 
 write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # write results into a .txt file
 ```
+
+# Getting small p values from regression 
+```{R, eval=FALSE}
+## linear regression
+2*pt(-abs(t), df)  # substitute t value and degrees of freedom from regression output.
+
+## logistic regression
+2*pnorm(-abs(z))  # substitute Z score from regression output.
+```
