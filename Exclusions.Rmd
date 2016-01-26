@@ -20,9 +20,9 @@ Pol_1<- For.Rebekah2[is.na(For.Rebekah2$FULLEPGTAFF)!=TRUE | is.na(For.Rebekah2$
 
 
 # Remove people with kidney disease, mmaybe gout, related people, or on urate lowering therapy.
-Cau_2<- Cau_1[Cau_1$SUAGROUP.1.use!= 3 & Cau_1$SUAGROUP.1.use!= 5 & Cau_1$SUAGROUP.1.use!= 7 & Cau_1$SUAGROUP.1.use!= 8, Cau_1$SUAGROUP.1.use!= 9, ]
+Cau_2<- Cau_1[Cau_1$SUAGROUP.1.use!= 3 & Cau_1$SUAGROUP.1.use!= 5 & Cau_1$SUAGROUP.1.use!= 7 & Cau_1$SUAGROUP.1.use!= 8 & Cau_1$SUAGROUP.1.use!= 9 & Cau_1$SUAGROUP.1.use!= 10, ]
 
-Pol_2<- Pol_1[Pol_1$SUAGROUP.1.use!= 3 & Pol_1$SUAGROUP.1.use!= 5 & Pol_1$SUAGROUP.1.use!= 7 & Pol_1$SUAGROUP.1.use!= 8, Pol_1$SUAGROUP.1.use!= 9, ]
+Pol_2<- Pol_1[Pol_1$SUAGROUP.1.use!= 3 & Pol_1$SUAGROUP.1.use!= 5 & Pol_1$SUAGROUP.1.use!= 7 & Pol_1$SUAGROUP.1.use!= 8 & Pol_1$SUAGROUP.1.use!= 9 & Pol_1$SUAGROUP.1.use!= 10, ]
 ```
 
 
