@@ -32,6 +32,10 @@ name<- sapply(strsplit(x=colnames(Cau_imp_RG), split="_", fixed=TRUE), "[[", 1) 
 colnames(Cau_imp_RG)<- name  # Make columnnames the same as those in the vector.
 
 write.table(Cau_imp_RG, file="Cau_imp_short.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+# Create a dataframe that is a condensed version of a larger one
+Taqman2<- data.frame(SUBJECT=c(Taqman$SUBJECT), Taqman[, 329:332])  # You can rename columns if you want.
+
 ```
 
 
