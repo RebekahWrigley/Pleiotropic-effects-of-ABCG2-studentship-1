@@ -1,0 +1,85 @@
+---
+output: pdf_document
+---
+The following code is for genotype data in the form of letters in two columns. (The file Cushla gave me has genotypes as numbers.)  The example here uses some of the genotype info I generated. I performed the same steps on rs11942223 info from Mandy.
+
+# Genotype info for individual SNPs
+```{R, eval=FALSE}
+# Put two alleles into a single column for each SNP.
+SNPMAX.export.2_my_gen_2<- within(SNPMAX.export.2_my_gen, RS2231142 <- ifelse(is.na(RS2231142_1)==TRUE | is.na(RS2231142_2)==TRUE, NA,  paste(RS2231142_1, RS2231142_2, sep='')))
+
+SNPMAX.export_3<- within(SNPMAX.export.2_my_gen_2, RS10011796 <- ifelse(is.na(RS10011796_1)==TRUE | is.na(RS10011796_2)==TRUE, NA,  paste(RS10011796_1, RS10011796_2, sep='')))
+
+
+# Convert genotypes to numbers with 1 being major allele homozygotes, 2 being heterozygotes, and 3 being minor allele homozygotes
+SNPMAX.export_3$RS2231142<- as.character(SNPMAX.export_3$RS2231142)
+SNPMAX.export_3$RS2231142[SNPMAX.export_3$RS2231142=="GG"]<- "1"
+SNPMAX.export_3$RS2231142[SNPMAX.export_3$RS2231142=="GT"]<- "2"
+SNPMAX.export_3$RS2231142[SNPMAX.export_3$RS2231142=="TT"]<- "3"
+SNPMAX.export_3$RS2231142[SNPMAX.export_3$RS2231142==""]<- "NA"
+SNPMAX.export_3$RS2231142<- unclass(SNPMAX.export_3$RS2231142)
+
+SNPMAX.export_3$RS10011796<- as.character(SNPMAX.export_3$RS10011796)
+SNPMAX.export_3$RS10011796[SNPMAX.export_3$RS10011796=="CC"]<- "1"
+SNPMAX.export_3$RS10011796[SNPMAX.export_3$RS10011796=="CT"]<- "2"
+SNPMAX.export_3$RS10011796[SNPMAX.export_3$RS10011796=="TT"]<- "3"
+SNPMAX.export_3$RS10011796[SNPMAX.export_3$RS10011796==""]<- "NA"
+SNPMAX.export_3$RS10011796<- unclass(SNPMAX.export_3$RS10011796)
+```
+
+
+
+The function below converts the genotype info to letters based on presence or absence of the minor allele so that major allele homozygotes are "A" and heterozygotes or minor allele homozygotes are "B". It works on the last two columns of the dataframe.
+```{R, eval=FALSE}
+genet_status<- function(genotype){i<- genotype[,(ncol(genotype)-1):ncol(genotype)]
+                                  ifelse(i=="NA", NA, ifelse(i=="1", "A", "B"))
+}
+
+xxx<- genet_status(SNPMAX.export_3)  
+colnames(xxx)<- c("RS2231142_g", "RS10011796_g") 
+
+SNPMAX.export_4<- cbind(SNPMAX.export_3, xxx)
+```
+
+
+
+# Generating combined genotype columns
+
+## Combined minor allele status column
+```{R, eval=FALSE}
+SNPMAX.export_4$RS2231142 <- as.numeric(SNPMAX.export_4$RS2231142)  # Need to do this for following step so that NAs are not characters (not sure why).
+SNPMAX.export_4$RS10011796 <- as.numeric(SNPMAX.export_4$RS10011796)
+
+abcg_comb <- ifelse(is.na(SNPMAX.export_4$RS2231142)==TRUE | is.na(SNPMAX.export_4$RS10011796)==TRUE, NA,  paste(SNPMAX.export_4$RS2231142, SNPMAX.export_4$RS10011796, sep=''))
+
+abcg_g_com <- ifelse(is.na(SNPMAX.export_4$RS2231142_g)==TRUE | is.na(SNPMAX.export_4$RS10011796_g)==TRUE, NA,  paste(SNPMAX.export_4$RS2231142_g, SNPMAX.export_4$RS10011796_g, sep=''))
+
+SNPMAX.export_5<- cbind(SNPMAX.export_4, abcg_g_com, abcg_comb)
+
+SNPMAX.export_5$abcg_g_com<- as.character(SNPMAX.export_5$abcg_g_com)
+SNPMAX.export_5$abcg_g_com[SNPMAX.export_5$abcg_g_com=="NA"]<- "NA"
+SNPMAX.export_5$abcg_g_com[SNPMAX.export_5$abcg_g_com=="AA"]<- "1"
+SNPMAX.export_5$abcg_g_com[SNPMAX.export_5$abcg_g_com=="AB"]<- "2"
+SNPMAX.export_5$abcg_g_com[SNPMAX.export_5$abcg_g_com=="BA"]<- "3"
+SNPMAX.export_5$abcg_g_com[SNPMAX.export_5$abcg_g_com=="BB"]<- "4"
+SNPMAX.export_5$abcg_g_com<- unclass(SNPMAX.export_5$abcg_g_com)
+```
+
+## Combined genotype column
+```{R, eval=FALSE}
+SNPMAX.export_5$abcg_comb<- as.character(SNPMAX.export_5$abcg_comb)
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="NA"]<- "NA"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="11"]<- "1"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="12"]<- "2"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="13"]<- "3"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="21"]<- "4"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="22"]<- "5"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="23"]<- "6"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="31"]<- "7"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="32"]<- "8"
+SNPMAX.export_5$abcg_comb[SNPMAX.export_5$abcg_comb=="33"]<- "9"
+SNPMAX.export_5$abcg_comb<- unclass(SNPMAX.export_5$abcg_comb)
+
+
+write.table(SNPMAX.export_5, file="My_geno.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
