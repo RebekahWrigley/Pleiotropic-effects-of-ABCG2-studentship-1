@@ -80,11 +80,11 @@ cf<- exp(confint(fit))
 results <- data.frame(matrix(nrow=1,ncol=6))
 names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n")
 results$SNP <- c("Interaction_term")
-results$OR[]<- co["RS2231142_gB:RS10011796_gB"]
-results$p[]<- coef(summary(fit))["RS2231142_gB:RS10011796_gB",4]
-results$CI_1[]<- cf["RS2231142_gB:RS10011796_gB",1]
-results$CI_2[]<- cf["RS2231142_gB:RS10011796_gB",2]
-results$n[]<-  (summary(fit)$df[2]) + 8
+results$OR<- co["RS2231142_gB:RS10011796_gB"]
+results$p<- coef(summary(fit))["RS2231142_gB:RS10011796_gB",4]
+results$CI_1<- cf["RS2231142_gB:RS10011796_gB",1]
+results$CI_2<- cf["RS2231142_gB:RS10011796_gB",2]
+results$n<-  (summary(fit)$df[2]) + 8
 results
 ```
 
