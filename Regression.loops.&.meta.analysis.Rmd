@@ -1,0 +1,120 @@
+---
+title: "Regression.loops.&.meta.analysis"
+author: "Rebekah Wrigley"
+date: "27/01/2015"
+output: pdf_document
+---
+# Importing multiple files at once
+Code imports all .txt files from the working directory, credit to Tom Kelly for showing me this. (I didn't do this but wish I had.)
+```{R, eval=FALSE}
+setwd("Imputed_data/")  # Change directory to where the correct files are.
+system("ls *.txt > files.txt")
+files <- readLines("files.txt")
+library("data.table")
+for(file in files){
+  assign(strsplit(paste0("x_", file), split="[.]")[[1]][1], fread(input=file, data.table=F))  # Adds x_ in front of file names.
+  print(paste(100*grep(file, files)/length(files), "% complete"))
+}
+```
+
+# Regression loops
+## Linear regression loop
+```{R, eval=FALSE}
+# Do linear regression using variables in specified columns
+colnames(NZ_FACC_allg_2)
+varlist<- colnames(NZ_FACC_allg_2)[53:55]  # Ensure column numbers are correct.
+models<- lapply(varlist, function(x) {
+  lm(substitute((URATE1MONTH*1000) ~ i*SEX+AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2)
+})
+
+lapply(models, summary)
+lapply(models, confint)
+
+# Make table to store results
+results <- data.frame(matrix(nrow=3,ncol=5))
+names(results) <- c("SNP", "B", "CI_1", "CI_2", "p")
+results$SNP <- c("RS2231142", "RS10011796", "RS11942223")
+
+# Put results in table.
+result_table<- for(i in 1:length(models)){
+  results$B[i]<- (lapply(models, summary))[[i]][[4]][2]
+  results$p[i]<- (lapply(models, summary))[[i]][[4]][2,4]
+  results$CI_1[i]<- (lapply(models, confint))[[i]][[2,1]]
+  results$CI_2[i]<- (lapply(models, confint))[[i]][[2,2]]
+  results$n[i]<-  (summary(models[[i]])$df[2]) + 4
+  results$SE[i]<- (lapply(models, summary))[[i]][[4]][2,2]
+} 
+results
+```
+
+
+## Logistic regression loop
+```{R, eval=FALSE}
+# Do logistic regression using variables in specified columns
+colnames(NZ_FACC_allg_2)
+varlist<- colnames(NZ_FACC_allg_2)[53:55]
+models<- lapply(varlist, function(x) {
+  glm(substitute((MYGOUTSUM-1) ~ (i) + AGECOL+SEX, list(i=as.name(x))), data= NZ_FACC_allg_2, family=binomial)
+})
+lapply(models, summary)
+co<- lapply(models, coefficients)
+cf<- lapply(models, confint)
+CO<- lapply(co, exp)
+CF<- lapply(cf, exp)
+
+# Make table to store results
+results <- data.frame(matrix(nrow=3,ncol=7))
+names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142", "RS10011796", "RS11942223")
+
+
+# Put results in table.
+result_table<- for(i in 1:length(models)){
+  results$OR[i]<- CO[[i]][[2]][1]
+  results$p[i]<- (lapply(models, summary))[[i]][[13]][2,4]
+  results$CI_1[i]<- CF[[i]][[2,1]]
+  results$CI_2[i]<- CF[[i]][[2,2]]
+  results$n[i]<-  (summary(models[[i]])$df[2]) + 4
+  results$SE[i]<- (lapply(models, summary))[[i]][[13]][2,2]
+}
+
+results
+```
+
+You can perform regression on subsets e.g. sexes separately or BMI strata separately.
+```{R, eval=FALSE}
+models<- lapply(varlist, function(x) {
+  glm(substitute((MYGOUTSUM-1) ~ (i) + AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2, family=binomial, subset=SEX==1)
+})
+```
+
+
+
+# Meta analysis
+```{R, eval=FALSE}
+install.packages("meta")
+
+library("meta", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+
+# The example below does meta analysis of BMI strata.
+A<- glm(formula = (MYGOUTSUM-1) ~ RS11942223+AGECOL+SEX, data = NZ_FACC_allg_2, family=binomial, subset = BMI_stat =="A")
+B<- glm(formula = (MYGOUTSUM-1) ~ RS11942223+AGECOL+SEX, data = NZ_FACC_allg_2, family=binomial, subset = BMI_stat =="B")
+C<- glm(formula = (MYGOUTSUM-1) ~ RS11942223+AGECOL+SEX, data = NZ_FACC_allg_2, family=binomial, subset = BMI_stat =="C")
+
+indiv <- data.frame(matrix(nrow=3,ncol=3))
+names(indiv) <- c("studlab","TE","seTE")
+indiv$studlab <- c("A","B","C")
+
+# A
+indiv[1,2:3] <- coef(summary(A))[2, c(1,2)]
+
+# B
+indiv[2,2:3] <- coef(summary(B))[2,c(1,2)]
+
+# C
+indiv[3,2:3] <- coef(summary(C))[2,c(1,2)]
+
+meta <- metagen(TE=TE,seTE=seTE, sm="OR", studlab=studlab,data=indiv)
+meta
+
+rm(A,B,C,meta,indiv)  # To ensure results don't get mixed up when repeating meta analysis on different files.
