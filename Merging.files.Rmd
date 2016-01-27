@@ -1,0 +1,51 @@
+---
+title: "Merging.files"
+author: "Rebekah Wrigley"
+date: "27/01/2015"
+output: pdf_document
+---
+Merging my files was actually a bit more complicated than this since I added genotype data at different time points. I also merged pre urate lowering therapy and diuretic info from files Mandy gave me with the file Cushla gave me- merged by ID using the merge function in R.
+
+```{R, eval=FALSE}
+# Merge CARDIA and CHS files with original one
+install.packages("plyr")
+library("plyr", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+
+NZ_FACC<- rbind.fill(Cau_new8, CARDIA_ABCG2_gen, CHS_ABCG2_gen)
+
+write.table(NZ_FACC, file="NZ_FACC.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+
+Strangely rbind.fill didn't work for merging my Polynesian and NPH files so I used the function below (I found this on the internet).
+```{R, eval=FALSE}
+# rbind keeping all columns
+rbind.all.columns <- function(x, y) {
+  
+  x.diff <- setdiff(colnames(x), colnames(y))
+  y.diff <- setdiff(colnames(y), colnames(x))
+  
+  x[, c(as.character(y.diff))] <- NA
+  
+  y[, c(as.character(x.diff))] <- NA
+  
+  return(rbind(x, y))
+}
+Pol_all_test<- rbind.all.columns(Pol_new, NPH_all)
+
+write.table(Pol_NPH, file="Pol_NPH.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+
+# Things to be aware of when merging datasets
+- Make sure important column names are the same.
+- If genotypes are present as numbers could compare genotype frequencies between datasets to check that they're coded the same way.
+
+- Check for duplicate IDs. I think there were subjects in ARIC and either CARDIA or CHS with the same IDs and I removed these.
+
+- CARDIA and CHS didn't have GOUTSUM or SUAGROUP columns, so I set these to 1 in the merged files.  Note it is not strictly correct to put SUAGROUP=1 for CHS since it includes people on diuretics.
+```{R, eval=FALSE}
+NZ_FACC$MYGOUTSUM[which(NZ_FACC$BOX=="CARDIA" | NZ_FACC$BOX=="CHS")]<- 1
+
+NZ_FACC$SUAGROUP.1.use[which(NZ_FACC$BOX=="CARDIA" | NZ_FACC$BOX=="CHS")]<- 1
+```
