@@ -69,7 +69,8 @@ results
 write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # write results into a .txt file
 ```
 
-# Logistic regression with interaction term between 2 SNPs
+# Logistic regression with interaction term 
+Here the interaction term is between two SNPs.
 ```{R, eval=FALSE}
 fit=glm((MYGOUTSUM-1)~RS2231142_g*RS10011796_g+AGECOL+SEX+GPANCESTRY+ETHCLASS.1.cau..2.ep..3.wp..9.epwp, data=Pol_NPH_abcg, family=binomial)
 summary(fit)
