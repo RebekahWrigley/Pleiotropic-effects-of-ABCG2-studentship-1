@@ -1,0 +1,32 @@
+---
+title: "LD.correlation"
+author: "Rebekah Wrigley"
+date: "27/01/2015"
+output: pdf_document
+---
+# Calculating correlations between SNPs
+## For EP and WP separately
+```{R, eval=FALSE}
+#Subset data including subjects with genotypes for both SNPs of interest.
+LD_ABCG2_Pol_sep<- Pol_NPH_nm[is.na(Pol_NPH_nm$RS2231142)!=TRUE & is.na(Pol_NPH_nm$RS10011796)!=TRUE,]
+
+# EP
+LD_ABCG2_EP<- LD_ABCG2_Pol_sep[LD_ABCG2_Pol_sep$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==1, ]
+EP_RS2231142<- c(LD_ABCG2_EP$RS2231142)
+EP_RS10011796<- c(LD_ABCG2_EP$RS10011796)
+cor.test(EP_RS2231142, EP_RS10011796)
+
+# WP
+LD_ABCG2_WP<- LD_ABCG2_Pol_sep[LD_ABCG2_Pol_sep$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==2, ]
+WP_RS2231142<- c(LD_ABCG2_WP$RS2231142)
+WP_RS10011796<- c(LD_ABCG2_WP$RS10011796)
+cor.test(WP_RS2231142, WP_RS10011796)
+```
+
+## For Caucasians
+```{R, eval=FALSE}
+NZ_FACC_GSTAT_sep<- NZ_FACC_GSTAT[is.na(NZ_FACC_GSTAT$RS2231142)!=TRUE & is.na(NZ_FACC_GSTAT$RS10011796)!=TRUE,]
+Cau_RS2231142<- c(NZ_FACC_GSTAT_sep$RS2231142)
+Cau_RS10011796<- c(NZ_FACC_GSTAT_sep$RS10011796)
+cor.test(Cau_RS2231142, Cau_RS10011796)
+```
