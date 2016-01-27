@@ -38,7 +38,7 @@ write.table(Pol_UO_3, file="Pol_UO.txt",row.names=FALSE,quote=FALSE,sep="\t",na=
 ```
 
 
-# Split by ETHCLASS (for Polynesians)
+# Split by ethnicity (for Polynesians)
 Import files created in steps above.
 
 ## WP
