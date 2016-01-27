@@ -1,0 +1,79 @@
+---
+title: "Urate.files"
+author: "Rebekah Wrigley"
+date: "27/01/2015"
+output: pdf_document
+---
+# Remove people on diuretics
+```{R, eval=FALSE}
+NZ_FACC_3<- NZ_FACC
+# Remove subjects taking diuretics from CHS- chsdiu is a vector of IDs of CHS patients taking diuretics (got this from Jaron)
+NZ_FACC_3[NZ_FACC_3$BOX=="CHS" & NZ_FACC_3$ID %in% chsdiu, ]<- NA  
+NZ_FACC_3<- NZ_FACC_3[is.na(NZ_FACC_3$ID)!=TRUE,]
+
+# Remove people taking or maybe taking diuretics but include people with no diuretic info
+NZ_FACC_4<- NZ_FACC_3[NZ_FACC_3$DIURETICSUMMARY!=2 & NZ_FACC_3$DIURETICSUMMARY!=3 | is.na(NZ_FACC_3$DIURETICSUMMARY)==TRUE, ]
+```
+
+The step below is necessary for files containing NPH data (since NPH has DIURETICCURRENT column instead of DIURETICSUMMARY column) but not for Europeans.
+```{R, eval=FALSE}
+NZ_FACC_4<- NZ_FACC_4[NZ_FACC_4$DIURETICCURRENT!=2 | is.na(NZ_FACC_4$DIURETICCURRENT)==TRUE, ]
+```
+
+# Creating urate quartiles
+```{R, eval=FALSE}
+# Exclude gout cases
+NZ_FACC_5<- NZ_FACC_4[NZ_FACC_4$SUAGROUP.1.use==1, ]
+
+# Separate males and females
+Cau_male<- NZ_FACC_5[NZ_FACC_5$SEX==1,]
+Cau_female<- NZ_FACC_5[NZ_FACC_5$SEX==2,]
+
+# Do the following steps for both males and females- example below for females.
+# Create condensed dataframe
+q1<- data.frame(ID=c(Cau_female$ID), URATE1MONTH=c(Cau_female$URATE1MONTH), SUAGROUP=c(Cau_female$SUAGROUP.1.use))
+
+# Remove people without urate info
+q1<- q1[is.na(q1$URATE1MONTH)!=TRUE, ]
+
+q1$urate_q<- cut(q1$URATE1MONTH , breaks=quantile(q1$URATE1MONTH),labels=1:4, include.lowest=TRUE)
+
+qq<- subset(q1, select=-c(URATE1MONTH, SUAGROUP))
+
+Cau_UQ_F<- merge(Cau_female, qq, by="ID", all.x=TRUE)
+
+Cau_UQ_F_2<- Cau_UQ_F[is.na(Cau_UQ_F$urate_q)!=TRUE,]
+
+# Check urate ranges in each quartile
+tapply(Cau_UQ_F_2$URATE1MONTH, Cau_UQ_F_2$urate_q, range)
+
+write.table(Cau_UQ_F_2, file="Cau_UQ_F.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+
+# Regression in each urate quartile
+Repeat code below changing subset=urate_q== to 2, 3, and 4
+```{R, eval=FALSE}
+colnames(Cau_UQ_F)
+varlist<- colnames(Cau_UQ_F)[53:55]  # SNP columns
+models<- lapply(varlist, function(x) {
+  lm(substitute((URATE1MONTH*1000) ~ i + AGECOL+SEX, list(i=as.name(x))), data= Cau_UQ_F, subset=urate_q==1)
+})
+lapply(models, summary)
+lapply(models, confint)
+
+#make table to store results
+results <- data.frame(matrix(nrow=3,ncol=7))
+names(results) <- c("SNP", "B", "CI_1", "CI_2", "p", "n", "SE")
+results$SNP <- c("RS2231142", "RS10011796", "RS11942223")
+
+#put results in table.
+result_table<- for(i in 1:length(models)){
+  results$B[i]<- (lapply(models, summary))[[i]][[4]][2]
+  results$p[i]<- (lapply(models, summary))[[i]][[4]][2,4]
+  results$CI_1[i]<- (lapply(models, confint))[[i]][[2,1]]
+  results$CI_2[i]<- (lapply(models, confint))[[i]][[2,2]]
+  results$n[i]<-  (summary(models[[i]])$df[2]) + 4
+} 
+results
+```
