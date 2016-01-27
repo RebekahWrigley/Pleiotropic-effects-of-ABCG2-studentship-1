@@ -8,7 +8,7 @@ output: pdf_document
 #Basic linear regression
 In the example below RS2231142 is the first explanatory variable and age, BMI, and sex are covariates.
 ```{R, eval=FALSE}
-fit=lm((URATE1MONTH*1000)~RS2231142+AGECOL+BMI+SEX, data=Cau_imp_RG)
+fit=lm((URATE1MONTH*1000)~RS2231142+AGECOL+BMI+SEX, data=NZ_FACC_allg_2)
 summary(fit)
 confint(fit)
 ```
@@ -37,7 +37,7 @@ rm(fit, results)
 #Basic logistic regression
 
 ```{R, eval=FALSE}
-fit=glm((MYGOUTSUM-1)~RS2231142_g+AGECOL+SEX, data=Cau_imp_RG, family=binomial)
+fit=glm((MYGOUTSUM-1)~RS2231142_g+AGECOL+SEX, data=NZ_FACC_allg_2, family=binomial)
 
 results <- data.frame(matrix(nrow=1,ncol=7))
 names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n", "SE")
@@ -69,7 +69,25 @@ results
 write.table(results, file="results.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # write results into a .txt file
 ```
 
-# Getting small p values from regression 
+# Logistic regression with interaction term between 2 SNPs
+```{R, eval=FALSE}
+fit=glm((MYGOUTSUM-1)~RS2231142_g*RS10011796_g+AGECOL+SEX+GPANCESTRY+ETHCLASS.1.cau..2.ep..3.wp..9.epwp, data=Pol_NPH_abcg, family=binomial)
+summary(fit)
+co<- exp(coefficients(fit))
+cf<- exp(confint(fit))
+
+results <- data.frame(matrix(nrow=1,ncol=6))
+names(results) <- c("SNP", "OR", "CI_1", "CI_2", "p", "n")
+results$SNP <- c("Interaction_term")
+results$OR[]<- co["RS2231142_gB:RS10011796_gB"]
+results$p[]<- coef(summary(fit))["RS2231142_gB:RS10011796_gB",4]
+results$CI_1[]<- cf["RS2231142_gB:RS10011796_gB",1]
+results$CI_2[]<- cf["RS2231142_gB:RS10011796_gB",2]
+results$n[]<-  (summary(fit)$df[2]) + 8
+results
+```
+
+# Get small p values from regression output
 ```{R, eval=FALSE}
 ## linear regression
 2*pt(-abs(t), df)  # substitute t value and degrees of freedom from regression output.
