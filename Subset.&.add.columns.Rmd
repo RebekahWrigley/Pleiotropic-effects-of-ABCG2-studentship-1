@@ -1,0 +1,95 @@
+---
+output: pdf_document
+---
+The examples below use a Polynesian file and I did the same for my European file.
+
+# Add BMI stratification column
+Make people with BMI under 25 "A", with BMI of 25 or more but lower than 30 "B", and with BMI greater than 30 "C".
+```{R, eval=FALSE}
+BMI_stat<- ifelse(is.na(Pol_NPH_nm$BMI)==TRUE, NA, ifelse(Pol_NPH_nm$BMI<25, "A", ifelse(Pol_NPH_nm$BMI>=25 & Pol_NPH_nm$BMI <30, "B", "C")))
+
+Pol_NPH_nm_2<- cbind(Pol_NPH_nm, BMI_stat)
+```
+
+# Add gout/urate status column
+```{R, eval=FALSE}
+GU_stat<- ifelse(is.na(Pol_NPH_nm_2$MYGOUTSUM)==TRUE | (Pol_NPH_nm_2$MYGOUTSUM==1 & is.na(Pol_NPH_nm_2$URATE1MONTH)==TRUE), "NA", ifelse(Pol_NPH_nm_2$MYGOUTSUM==2, "G", ifelse(Pol_NPH_nm_2$MYGOUTSUM==1 & Pol_NPH_nm_2$URATE1MONTH<= 0.41, "N", "H")))
+
+Pol_NPH_nm_3<- cbind(Pol_NPH_nm_2, GU_stat)
+
+write.table(Pol_NPH_nm_3, file="Pol_allc.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")  # Includes all controls.
+```
+
+# Subset using gout/urate status column
+## HU controls only
+```{R, eval=FALSE}
+Pol_HU<- Pol_allc[Pol_allc$GU_stat=="G" | Pol_allc$GU_stat=="H",]  # Include gout cases and hyperuricemic controls only.
+Pol_HU_2 <- Pol_HU[is.na(Pol_HU$GU_stat)!=TRUE,]  # Remove people with no GU stat info.
+write.table(Pol_HU_2, file="Pol_HU.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+## HU vs NU- no gout cases
+```{R, eval=FALSE}
+Pol_UO<- Pol_allc[Pol_allc$GU_stat=="H" | Pol_allc$GU_stat=="N",]  # Include controls only.
+Pol_UO_2 <- Pol_UO[is.na(Pol_UO$GU_stat)!=TRUE,]
+U_stat<- ifelse(Pol_UO_2$GU_stat=="N", 0, ifelse(Pol_UO_2$GU_stat=="H", 1, NA))  # Make case-control column (hyperuricemic controls vs normouricemic controls).
+Pol_UO_3<- cbind(Pol_UO_2, U_stat)
+write.table(Pol_UO_3, file="Pol_UO.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+
+# Split by ETHCLASS (for Polynesians)
+Import files created in steps above.
+
+## WP
+```{R, eval=FALSE}
+WP_allc<- Pol_allc[Pol_allc$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==2,]
+WP_HU<- Pol_HU[Pol_HU$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==2,]
+WP_UO<- Pol_HU[Pol_UO$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==2,]
+```
+
+## EP
+```{R, eval=FALSE}
+EP_allc<- Pol_allc[Pol_allc$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==1,]
+EP_HU<- Pol_HU[Pol_HU$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==1,]
+EP_UO<- Pol_HU[Pol_UO$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==1,]
+```
+
+
+# Subset EP files including subjects with 3 or more Polynesian grandparents
+```{R, eval=FALSE}
+EP_allc_2<- EP_allc[EP_allc$GPANCESTRY>=0.75,]
+EP_allc_3<- EP_allc_2[is.na(EP_allc_2$GPANCESTRY)!=TRUE,]
+write.table(EP_allc_3, file="EP_allc_GP.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+EP_HU_2<- EP_HU[EP_HU$GPANCESTRY>=0.75,]
+EP_HU_3<- EP_HU_2[is.na(EP_HU_2$GPANCESTRY)!=TRUE,]
+write.table(EP_HU_3, file="EP_HU_GP.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+EP_UO_2<- EP_UO[EP_UO$GPANCESTRY>=0.75,]
+EP_UO_3<- EP_UO_2[is.na(EP_UO_2$GPANCESTRY)!=TRUE,]
+write.table(EP_UO_3, file="EP_UO_GP.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+# Subset EP to include NPH only
+```{R, eval=FALSE}
+NPH_allc<- EP_allc[EP_allc$BOX==1 | EP_allc$BOX==2 | EP_allc$BOX==3 | EP_allc$BOX==4 | EP_allc$BOX==5 | EP_allc$BOX==6 | EP_allc$BOX==7,]
+NPH_allc<- NPH_allc[is.na(NPH_allc$ID)!=TRUE,]
+write.table(NPH_allc, file="NPH_allc.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+NPH_HU<- EP_HU[EP_HU$BOX==1 | EP_HU$BOX==2 | EP_HU$BOX==3 | EP_HU$BOX==4 | EP_HU$BOX==5 | EP_HU$BOX==6 | EP_HU$BOX==7,]
+NPH_HU<- NPH_HU[is.na(NPH_HU$ID)!=TRUE,]
+write.table(NPH_HU, file="NPH_HU.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+NPH_UO<- EP_UO[EP_UO$BOX==1 | EP_UO$BOX==2 | EP_UO$BOX==3 | EP_UO$BOX==4 | EP_UO$BOX==5 | EP_UO$BOX==6 | EP_UO$BOX==7,]
+NPH_UO<- NPH_UO[is.na(NPH_UO$ID)!=TRUE,]
+write.table(NPH_UO, file="NPH_UO.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+
+# Subset to include rs2231142 major allele homozygotes only
+```{R, eval=FALSE}
+EP_223_1_allc<- EP_allc[EP_allc$RS2231142==1,]
+EP_223_1_allc<- EP_223_1_allc[is.na(EP_223_1_allc$ID)!=TRUE,]
+write.table(EP_223_1_allc, file="EP_223_1_allc.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+```
+Did the same thing for other files.
