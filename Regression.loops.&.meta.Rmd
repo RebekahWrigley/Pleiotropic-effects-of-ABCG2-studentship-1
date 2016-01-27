@@ -18,6 +18,7 @@ for(file in files){
 ```
 
 # Regression loops
+Ensure the columns you want to loop over are adjacent to each other before using these loops. 
 ## Linear regression loop
 ```{R, eval=FALSE}
 # Do linear regression using variables in specified columns
