@@ -10,7 +10,7 @@ Exclusions for the urate analysis are described elsewhere.
 
 ```{R, eval=FALSE}
 # Read in data
-For.Rebekah2 <- read.delim("/Volumes/staff_groups/merrimanlab/Merriman Documents/Rebekah/ABCG2_files/Imputed_data/For Rebekah2.txt", stringsAsFactors=FALSE)
+Correct_for_Rebekah2 <- read.delim("/Volumes/staff_groups/merrimanlab/Merriman Documents/Rebekah/ABCG2_files/Imputed_data/Correct_for_Rebekah2.txt", stringsAsFactors=FALSE)
 
 
 # Separate by ethnicity.
