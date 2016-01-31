@@ -25,7 +25,7 @@ Ensure the columns you want to loop over are adjacent to each other before using
 colnames(NZ_FACC_allg_2)
 varlist<- colnames(NZ_FACC_allg_2)[53:55]  # Ensure column numbers are correct.
 models<- lapply(varlist, function(x) {
-  lm(substitute((URATE1MONTH*1000) ~ i*SEX+AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2)
+  lm(substitute((URATE1MONTH*1000) ~ i+SEX+AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2)
 })
 
 lapply(models, summary)
