@@ -91,7 +91,7 @@ models<- lapply(varlist, function(x) {
 
 
 
-# Meta analysis
+# Meta analysis for logistic regression
 ```{R, eval=FALSE}
 install.packages("meta")
 
