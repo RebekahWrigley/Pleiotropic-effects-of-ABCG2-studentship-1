@@ -31,7 +31,7 @@ I used data from the following sources:
 
 ### My filenames
 Files I used and raw files are on the server under Rebekah > ABCG2_files > For_github.  There are too many files to list individually but filenames should be self-explanatory:
-- NZ_FACC stands for NZ, FHS, ARIC, CARDIA, and CHS.
+- NZ_FACC stands for NZ Europeans (plus AGRIA and Eurogout), FHS, ARIC, CARDIA, and CHS.
 - "Pol" files include EP (including NPH) and WP (but not mixed EP/WP).
 - "allc" files contain gout cases and all controls; NZ_FACC_allg_2 also contains all controls.
 - "HU" files contain gout cases and only hyperuricemic controls.
