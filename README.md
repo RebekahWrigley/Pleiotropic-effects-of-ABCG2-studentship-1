@@ -41,4 +41,5 @@ Files I used and raw files are on the server under Rebekah > ABCG2_files > For_g
 - "male" files contain only males.
 - Files with "223_1" in their name contain only rs2231142 major allele homozygotes.
 
+### Things to keep in mind
 
