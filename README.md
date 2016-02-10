@@ -24,7 +24,10 @@ Excluded people with kidney disease, on urate lowering therapy, related people i
 
 - rs1194223 info for NZ cases and controls and NPH from Mandy
 
+- rs10011796 in NZ cases and controls and rs2231142 in AGRIA and some Eurogout boxes I genotyped
+
 - Diuretic and pre urate lowering therapy urate info from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
 
+Files I used and raw files are on the server under Rebekah > ABCG2_files > For_github.
 
 
