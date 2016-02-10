@@ -15,7 +15,8 @@ Association of rs2231142 and rs10011796 with urate in urate quartiles in Europea
 ## Exclusion criteria
 Excluded people with kidney disease, on urate lowering therapy, related people in FHS generation 3.  People on diuretics are included since associations including and excluding people with diuretics were compared and there were no major differences.
 
-## Where I got datasets from
+## Datasets
+I used data from the following sources:
 - Big file from Cushla containing NZ cases and controls, AGRIA, Eurogout, ARIC, and FHS (both generations) with rs2231142, rs10011796, rs2043211, and rs1143623 genotype info (for ARIC and FHS these SNPs were reimputed).  I manually deleted MAS gout box 10 and AGRIA ST Vincent since these did not have FULLCAUGTAFF column info (so was not certain that these were European).
 
 - rs2231142 and rs10011796 info for CARDIA and CHS from Jaron
@@ -28,6 +29,16 @@ Excluded people with kidney disease, on urate lowering therapy, related people i
 
 - Diuretic and pre urate lowering therapy urate info from Mandy and diuretic info for CHS from Jaron (merged this info with other files).
 
-Files I used and raw files are on the server under Rebekah > ABCG2_files > For_github.
+### My filenames
+Files I used and raw files are on the server under Rebekah > ABCG2_files > For_github.  There are too many files to list individually but filenames should be self-explanatory:
+- NZ_FACC stands for NZ, FHS, ARIC, CARDIA, and CHS.
+- "Pol" files include EP (including NPH) and WP (but not mixed EP/WP).
+- "allc" files contain gout cases and all controls; NZ_FACC_allg_2 also contains all controls.
+- "HU" files contain gout cases and only hyperuricemic controls.
+- "UO" files contain only controls.
+- "GP" at the end of EP files means they contain only EP with GP ancestry of 0.75 or greater.
+- The EP3GP+WP folder contains files with EP with GP ancestry of 0.75 or greater and WP.
+- "male" files contain only males.
+- Files with "223_1" in their name contain only rs2231142 major allele homozygotes.
 
 
