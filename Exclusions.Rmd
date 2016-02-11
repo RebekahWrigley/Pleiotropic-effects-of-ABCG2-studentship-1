@@ -10,19 +10,19 @@ Exclusions for the urate analysis are described elsewhere.
 
 ```{R, eval=FALSE}
 # Read in data
-For.Rebekah2 <- read.delim("/Volumes/staff_groups/merrimanlab/Merriman Documents/Rebekah/ABCG2_files/Imputed_data/For Rebekah2.txt", stringsAsFactors=FALSE)
+Correct_for_Rebekah2 <- read.delim("/Volumes/staff_groups/merrimanlab/Merriman Documents/Rebekah/ABCG2_files/Imputed_data/Correct_for_Rebekah2.txt", stringsAsFactors=FALSE)
 
 
 # Separate by ethnicity.
-Cau_1<- For.Rebekah2[For.Rebekah2$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==3, ]  # Include only Europeans
+Cau_1<- Correct_for_Rebekah2[Correct_for_Rebekah2$ETHCLASS.1.cau..2.ep..3.wp..9.epwp==3, ]  # Include only Europeans
 
-Pol_1<- For.Rebekah2[is.na(For.Rebekah2$FULLEPGTAFF)!=TRUE | is.na(For.Rebekah2$FULLWPGTAFF)!=TRUE, ]  # Include only EP and WP (not mixed EP/WP).
+Pol_1<- Correct_for_Rebekah2[is.na(Correct_for_Rebekah2$FULLEPGTAFF)!=TRUE | is.na(Correct_for_Rebekah2$FULLWPGTAFF)!=TRUE, ]  # Include only EP and WP (not mixed EP/WP).
 
 
-# Remove people with kidney disease, mmaybe gout, related people, or on urate lowering therapy.
-Cau_2<- Cau_1[Cau_1$SUAGROUP.1.use!= 3 & Cau_1$SUAGROUP.1.use!= 5 & Cau_1$SUAGROUP.1.use!= 7 & Cau_1$SUAGROUP.1.use!= 8, Cau_1$SUAGROUP.1.use!= 9, ]
+# Remove people with kidney disease, maybe gout, related people, or on urate lowering therapy.
+Cau_2<- Cau_1[Cau_1$SUAGROUP.1.use!= 3 & Cau_1$SUAGROUP.1.use!= 5 & Cau_1$SUAGROUP.1.use!= 7 & Cau_1$SUAGROUP.1.use!= 8 & Cau_1$SUAGROUP.1.use!= 9 & Cau_1$SUAGROUP.1.use!= 10, ]
 
-Pol_2<- Pol_1[Pol_1$SUAGROUP.1.use!= 3 & Pol_1$SUAGROUP.1.use!= 5 & Pol_1$SUAGROUP.1.use!= 7 & Pol_1$SUAGROUP.1.use!= 8, Pol_1$SUAGROUP.1.use!= 9, ]
+Pol_2<- Pol_1[Pol_1$SUAGROUP.1.use!= 3 & Pol_1$SUAGROUP.1.use!= 5 & Pol_1$SUAGROUP.1.use!= 7 & Pol_1$SUAGROUP.1.use!= 8 & Pol_1$SUAGROUP.1.use!= 9 & Pol_1$SUAGROUP.1.use!= 10, ]
 ```
 
 

@@ -20,7 +20,7 @@ The step below is necessary for files containing NPH data (since NPH has DIURETI
 NZ_FACC_4<- NZ_FACC_4[NZ_FACC_4$DIURETICCURRENT!=2 | is.na(NZ_FACC_4$DIURETICCURRENT)==TRUE, ]
 ```
 
-# Creating urate quartiles
+# Create urate quartiles
 ```{R, eval=FALSE}
 # Exclude gout cases
 NZ_FACC_5<- NZ_FACC_4[NZ_FACC_4$SUAGROUP.1.use==1, ]

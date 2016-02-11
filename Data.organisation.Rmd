@@ -1,5 +1,5 @@
 ---
-title: "Random.useful.stuff"
+title: "Data.organisation.and.naming"
 author: "Rebekah Wrigley"
 date: "26/01/2015"
 output: pdf_document
@@ -12,16 +12,24 @@ index <- which(data$maj==99, arr.ind=TRUE) # finds the row number of the cell wi
 data$maj[index]<- NA  # changes the the value in this row to NA
 
 
+
 # Remove rows which have the same values in a particular column- good to check for duplicated IDs after combining datasets.
 NPH_2<- NPH[duplicated(NPH$minor)!=TRUE,]
+
 
 
 # Reordering columns in a dataframe- might want to do this if going to run a loop on adjacent columns.
 Pol_NPH_nm_4<- Pol_NPH_nm_3[, c(1:49, 65, 50:64)]  # put column numbers in the order you want.
 
 
-# Merging contents of mutually exclusive columns (where either one or the other column has data for a given row)- this is useful after merging 2 files since there will be .x and .y versions of shared columns.
+# Remove columns from a dataframe
+data_2<- subset(data, select=-c(column_a, column_b))
+
+
+# Merging contents of mutually exclusive columns (where either one or the other column has data for a given row)- 
+## This is useful after merging 2 files since there will be .x and .y versions of shared columns.
 Cau_new$RS2231142_g<- ifelse(is.na(Cau_new$RS2231142_g.x)!=TRUE, Cau_new$RS2231142_g.x, Cau_new$RS2231142_g.y)
+
 
 # Shortening long column names where you want to keep only part of the name before an underscore
 name<- sapply(strsplit(x=colnames(Cau_imp_RG), split="_", fixed=TRUE), "[[", 1)  # Create vector of shortened columnnames.
@@ -29,15 +37,13 @@ name<- sapply(strsplit(x=colnames(Cau_imp_RG), split="_", fixed=TRUE), "[[", 1) 
 colnames(Cau_imp_RG)<- name  # Make columnnames the same as those in the vector.
 
 write.table(Cau_imp_RG, file="Cau_imp_short.txt",row.names=FALSE,quote=FALSE,sep="\t",na="NA")
+
+
+# Create a dataframe that is a condensed version of a larger one
+Taqman2<- data.frame(SUBJECT=c(Taqman$SUBJECT), Taqman[, 329:332])  # You can rename columns if you want.
+
 ```
 
 
-# Getting small p values from regression 
-```{R, eval=FALSE}
-## linear regression
-2*pt(-abs(t), df)  # substitute t value and degrees of freedom from regression output.
 
-## logistic regression
-2*pnorm(-abs(z))  # substitute Z score from regression output.
-```
 

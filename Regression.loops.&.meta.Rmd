@@ -5,9 +5,11 @@ date: "27/01/2015"
 output: pdf_document
 ---
 # Importing multiple files at once
-Code imports all .txt files from the working directory, credit to Tom Kelly for showing me this. (I didn't do this but wish I had.)
+Code imports all .txt files from the current working directory, credit to Tom Kelly for showing me this. (I didn't do this but wish I had.)
 ```{R, eval=FALSE}
-setwd("Imputed_data/")  # Change directory to where the correct files are.
+install.packages("data.table")  # Only need to install this once
+
+setwd("Imputed_data/")  # Change working directory to where the correct files are.
 system("ls *.txt > files.txt")
 files <- readLines("files.txt")
 library("data.table")
@@ -18,13 +20,14 @@ for(file in files){
 ```
 
 # Regression loops
+Ensure the columns you want to loop over are adjacent to each other before using these loops. 
 ## Linear regression loop
 ```{R, eval=FALSE}
 # Do linear regression using variables in specified columns
 colnames(NZ_FACC_allg_2)
 varlist<- colnames(NZ_FACC_allg_2)[53:55]  # Ensure column numbers are correct.
 models<- lapply(varlist, function(x) {
-  lm(substitute((URATE1MONTH*1000) ~ i*SEX+AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2)
+  lm(substitute((URATE1MONTH*1000) ~ i+SEX+AGECOL, list(i=as.name(x))), data= NZ_FACC_allg_2)
 })
 
 lapply(models, summary)
@@ -90,7 +93,7 @@ models<- lapply(varlist, function(x) {
 
 
 
-# Meta analysis
+# Meta analysis for logistic regression
 ```{R, eval=FALSE}
 install.packages("meta")
 
